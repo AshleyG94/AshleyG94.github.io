@@ -9,6 +9,10 @@ const router = createRouter({
       path: "/weekday-trainer",
       component: () => import("./pages/WeekdayTrainer.vue"),
     },
+    {
+      path: "/sign-quiz",
+      component: () => import("./pages/SignQuiz.vue"),
+    },
   ],
 });
 

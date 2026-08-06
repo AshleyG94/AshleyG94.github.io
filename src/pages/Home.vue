@@ -12,6 +12,10 @@ import { RouterLink } from "vue-router";
         <RouterLink to="/weekday-trainer">Weekday Trainer</RouterLink>
         &mdash; practice figuring out the day of the week for any date.
       </li>
+      <li>
+        <RouterLink to="/sign-quiz">Sign Quiz</RouterLink>
+        &mdash; practice BSL signs from the GCSE vocabulary list.
+      </li>
     </ul>
   </div>
 
