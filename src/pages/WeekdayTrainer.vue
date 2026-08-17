@@ -89,6 +89,11 @@ function handleGuess(day) {
   {
     correctAnswers.value++;
   }
+  else 
+  {
+    gameState.value = "results";
+    return;
+  }
   if ( currentQuestion.value >= totalQuestions )
   {
     gameState.value = "results";
