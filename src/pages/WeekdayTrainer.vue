@@ -89,7 +89,7 @@ const correctAnswers = ref(0);
 const questionStartTime = ref(0);
 const guessHistory = ref([]);
 const bestEverTime = ref(null);
-const BEST_TIME_KEY = "BEST_TIME";
+const BEST_TIME_KEY = "BEST_TIME_V2";
 
 const dayNames = [
   "Monday",
