@@ -76,6 +76,7 @@ onMounted(() => {
 
 function startGame() {
   gameState.value="playing";
+  responseTimes.value = [];
   currentQuestion.value = 1;
   correctAnswers.value = 0;
   newRandomDate();
