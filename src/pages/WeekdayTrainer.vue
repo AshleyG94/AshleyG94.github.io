@@ -43,6 +43,31 @@
       Congrats on your new record!
     </p>
 
+    <table class="breakdown">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Answer</th>
+          <th>Guess</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(entry, index) in guessHistory"
+          :key="index"
+          :class="entry.correct ? 'row-correct' : 'row-wrong'"
+        >
+          <td>{{ index + 1 }}</td>
+          <td>{{ entry.dateText }}</td>
+          <td>{{ dayNames[entry.actual] }}</td>
+          <td>{{ entry.correct ? "✓" : dayNames[entry.guessed] }}</td>
+          <td>{{ (entry.ms / 1000).toFixed(2) }} s</td>
+        </tr>
+      </tbody>
+    </table>
+
     <button @click="startGame">
       Play Again
     </button>
@@ -62,9 +87,19 @@ const currentQuestion = ref(1);
 const totalQuestions = 10;
 const correctAnswers = ref(0);
 const questionStartTime = ref(0);
-const responseTimes = ref([]);
+const guessHistory = ref([]);
 const bestEverTime = ref(null);
 const BEST_TIME_KEY = "BEST_TIME";
+
+const dayNames = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 
 onMounted(() => {
@@ -76,21 +111,30 @@ onMounted(() => {
 
 function startGame() {
   gameState.value="playing";
-  responseTimes.value = [];
   currentQuestion.value = 1;
   correctAnswers.value = 0;
+  guessHistory.value = [];
   newRandomDate();
 }
 
 
 function handleGuess(day) {
   const responseTime = Date.now() - questionStartTime.value;
-  responseTimes.value.push(responseTime);
-  if ( day === actualDay.value )
+  const correct = day === actualDay.value;
+
+  guessHistory.value.push({
+    dateText: displayDate.value,
+    guessed: day,
+    actual: actualDay.value,
+    ms: responseTime,
+    correct: correct,
+  });
+
+  if ( correct )
   {
     correctAnswers.value++;
   }
-  else 
+  else
   {
     gameState.value = "results";
     return;
@@ -194,15 +238,15 @@ const displayDate = computed(() => {
 });
 
 const averageTime = computed(() => {
-  if (responseTimes.value.length === 0){
+  if (guessHistory.value.length === 0){
     return 0;
   }
-  const total = responseTimes.value.reduce(
-    (sum, time) => sum + time,
+  const total = guessHistory.value.reduce(
+    (sum, entry) => sum + entry.ms,
     0
   );
 
-  return Math.round(total / responseTimes.value.length)
+  return Math.round(total / guessHistory.value.length)
 });
 
 
@@ -217,12 +261,27 @@ const averageTime = computed(() => {
     "Segoe UI",
     sans-serif;
 
-  flex: 1;             
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   justify-content: center;
   margin-top: calc(var(--header-height) * -2);
+}
+
+.breakdown {
+  margin: 1rem auto;
+  border-collapse: collapse;
+}
+
+.breakdown th,
+.breakdown td {
+  padding: 0.25rem 0.75rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.row-wrong {
+  color: #c0392b;
 }
 </style>
