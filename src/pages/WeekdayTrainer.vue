@@ -76,7 +76,7 @@
   </main>
 </template>
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, nextTick } from "vue";
 
 import DateBox from "./weekday-trainer/components/DateBox.vue";
 import DayButtons from "./weekday-trainer/components/DayButtons.vue";
@@ -119,7 +119,7 @@ function startGame() {
 
 
 function handleGuess(day) {
-  const responseTime = Date.now() - questionStartTime.value;
+  const responseTime = performance.now() - questionStartTime.value;
   const correct = day === actualDay.value;
 
   guessHistory.value.push({
@@ -183,7 +183,12 @@ function randomDate2026() {
 
 function newRandomDate() {
   selectedDate.value = randomDate2026();
-  questionStartTime.value = Date.now();
+  questionStartTime.value = 0;
+  nextTick(() => {                      
+    requestAnimationFrame(() => {      
+      questionStartTime.value = performance.now();
+    });
+  });
 }
 
 // -----------------------------
